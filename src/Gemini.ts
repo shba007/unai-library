@@ -1,6 +1,7 @@
 import { $fetch } from "ofetch";
 import { DistilledParams } from "./types";
 import { env } from "std-env";
+import pipeStream from "./utils/pipe-stream";
 
 interface GeminiResponse {
   candidates: {
@@ -25,14 +26,14 @@ const GEMINI_BASE_URL =
   "https://generativelanguage.googleapis.com/v1beta/models";
 
 export async function gemini(model: string, params: DistilledParams) {
-  const res = await $fetch<GeminiResponse>(
+  const res = $fetch<GeminiResponse | ReadableStream<Uint8Array>>(
     `/${model}:${params.stream ? "streamGenerateContent" : "generateContent"}`,
     {
       baseURL: GEMINI_BASE_URL,
       method: "POST",
       query: {
-        ...(params.stream ? { alt: "sse" } : {}),
         key: env.GEMINI_API_KEY,
+        ...(params.stream ? { alt: "sse" } : {}),
       },
       body: {
         contents: [
@@ -40,26 +41,47 @@ export async function gemini(model: string, params: DistilledParams) {
             parts: params.messages.map(({ content }) => ({ text: content })),
           },
         ],
-        /*       generationConfig: {
-        response_mime_type: 'application/json',
-        response_schema: {
-          type: 'ARRAY',
-          items: {
-            type: 'OBJECT',
-            properties: {
-              recipe_name: { type: 'STRING' },
+        /* generationConfig: {
+          response_mime_type: 'application/json',
+          response_schema: {
+            type: 'ARRAY',
+            items: {
+              type: 'OBJECT',
+              properties: {
+                recipe_name: { type: 'STRING' },
+              },
             },
           },
-        },
-      }, */
+        }, */
       },
-      responseType: params.stream ? "stream" : "json",
+      // @ts-ignore
+      responseType: params.stream ? "stream" : undefined,
     },
   );
 
-  // console.log('\n\n\n\n Gemini', { res: JSON.stringify(res) }, '\n\n\n\n')
-
   return {
-    content: res.candidates.map(({ content }) => content.parts[0].text).at(-1)!,
+    content: await res.then((res) => {
+      if (res instanceof ReadableStream) {
+        let delta: string | null = null;
+        let total: string | null = null;
+
+        return pipeStream<{ delta: string; total: string }>(
+          res,
+          (data: GeminiResponse) => {
+            const value = data.candidates
+              .map(({ content }) => content.parts[0].text)
+              .at(-1)!;
+            delta = value;
+            total = (total ?? "") + value;
+
+            return { delta, total };
+          },
+        );
+      } else {
+        return res.candidates
+          .map(({ content }) => content.parts[0].text)
+          .at(-1)!;
+      }
+    }),
   };
 }

@@ -1,9 +1,20 @@
 import { initAI } from "../src";
+import readStream from "../src/utils/read-stream";
 
 const ai = initAI();
 
-const result = await ai.run("@Gemini/gemini-1.5-flash-8b", {
-  prompt: "What is the sky color",
+// @Google/gemini-1.5-flash-8b
+
+const result = await ai.run("@Google/gemini-1.5-flash-8b", {
+  prompt: "write 1 to 100",
+  stream: true,
 });
 
-console.log({ result: result.content });
+if (result.content instanceof ReadableStream) {
+  console.log("Stream\n");
+  readStream(result.content, ({ delta, total }) => {
+    process.stdout.write(delta);
+  });
+} else {
+  console.log("Not Stream\n", result.content);
+}

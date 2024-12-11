@@ -2,8 +2,12 @@
 
 ## Todo
 
-- Streamed Response
-- JSON Mode
-- Structured Output
-- Function Calling/Tool Use
-- Image Input
+| **Feature**               | **OpenAI** | **Gemini** | **Ollama** |
+| ------------------------- | ---------- | ---------- | ---------- |
+| Streamed Response         | ✅         | ✅         | ❌         |
+| JSON Mode                 | ❌         | ❌         | ❌         |
+| Structured Output         | ❌         | ❌         | ❌         |
+| Function Calling/Tool Use | ❌         | ❌         | ❌         |
+| Doc Input                 | ❌         | ❌         | ❌         |
+| Image Input               | ❌         | ❌         | ❌         |
+| Audio Input               | ❌         | ❌         | ❌         |
