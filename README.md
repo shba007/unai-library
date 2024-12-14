@@ -2,12 +2,15 @@
 
 ## Todo
 
-| **Feature**               | **OpenAI** | **Gemini** | **Ollama** |
-| ------------------------- | ---------- | ---------- | ---------- |
-| Streamed Response         | ✅         | ✅         | ❌         |
-| JSON Mode                 | ❌         | ❌         | ❌         |
-| Structured Output         | ❌         | ❌         | ❌         |
-| Function Calling/Tool Use | ❌         | ❌         | ❌         |
-| Doc Input                 | ❌         | ❌         | ❌         |
-| Image Input               | ❌         | ❌         | ❌         |
-| Audio Input               | ❌         | ❌         | ❌         |
+| **Feature**               | **Ollama** | **Gemini** | **OpenAI** | **Perplexity** |
+| ------------------------- | ---------- | ---------- | ---------- | -------------- |
+| Streamed Response         | ✅         | ✅         | ✅         | ❌             |
+| JSON Mode                 | ✅         | ✅         | ✅         | ❌             |
+| Structured Output         | ✅         | ✅         | ✅         | ❌             |
+| Function Calling/Tool Use | ❌         | ❌         | ❌         | ❌             |
+| Memory (STM/LTM)          | ❌         | ❌         | ❌         | ❌             |
+| Doc Input                 | ❌         | ❌         | ❌         | ❌             |
+| Image Input               | ❌         | ❌         | ❌         | ❌             |
+| Image Output              | ❌         | ❌         | ❌         | ❌             |
+| Audio Input               | ❌         | ❌         | ❌         | ❌             |
+| Audio Output              | ❌         | ❌         | ❌         | ❌             |
