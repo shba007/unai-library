@@ -1,5 +1,11 @@
 # unai
 
+## 0.1.1
+
+### Patch Changes
+
+- 4d2af6e: chore: add commitlint and husky for commit message linting
+
 ## 0.1.0
 
 ### Minor Changes
