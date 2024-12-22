@@ -36,7 +36,7 @@ interface OpenAIResponse {
 const OPENAI_BASE_URL = 'https://api.openai.com/v1'
 
 export async function openAI(model: string, params: DistilledParams) {
-  // console.log(JSON.stringify(params.format))
+  // consola.log(JSON.stringify(params.format))
   const res = $fetch<OpenAIResponse | ReadableStream<Uint8Array>>('/chat/completions', {
     baseURL: OPENAI_BASE_URL,
     headers: {
@@ -71,16 +71,16 @@ export async function openAI(model: string, params: DistilledParams) {
         let total: string
 
         return pipeStream<{ delta: string; total: string }>(res, (data: OpenAIResponse) => {
-          // console.log({ choices: data.choices.at(-1) })
+          // consola.log({ choices: data.choices.at(-1) })
           const value = data.choices.at(-1)!.delta?.content ?? ''
-          // console.log({ value })
+          // consola.log({ value })
           delta = value
           total = (total ?? '') + value
 
           return { delta, total }
         })
       } else {
-        // console.log({ input: params.messages, output: res.choices[0].message.content })
+        // consola.log({ input: params.messages, output: res.choices[0].message.content })
         return res.choices.at(-1)!.message.content
       }
     }),

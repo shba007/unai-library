@@ -25,7 +25,7 @@ interface GeminiResponse {
 const GEMINI_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/models'
 
 export async function google(model: string, params: DistilledParams) {
-  // console.log({ format: JSON.stringify(formatJSONSchema(params.format)) });
+  // consola.log({ format: JSON.stringify(formatJSONSchema(params.format)) });
   const res = $fetch<GeminiResponse | ReadableStream<Uint8Array>>(`/${model}:${params.stream ? 'streamGenerateContent' : 'generateContent'}`, {
     baseURL: GEMINI_BASE_URL,
     method: 'POST',
@@ -66,7 +66,7 @@ export async function google(model: string, params: DistilledParams) {
           return { delta, total }
         })
       } else {
-        // console.log({ input: params.messages, output: res.candidates[0].content.parts[0].text })
+        // consola.log({ input: params.messages, output: res.candidates[0].content.parts[0].text })
         return res.candidates.map(({ content }) => content.parts[0].text).at(-1)!
       }
     }),

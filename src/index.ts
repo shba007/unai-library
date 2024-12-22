@@ -1,8 +1,8 @@
-import { ollama } from './models/Ollama'
-import { google } from './models/Google'
-import { openAI } from './models/OpenAI'
-import { perplexity } from './models/Perplexity'
-import { anthropic } from './models/Anthropic'
+import { ollama } from './models/ollama'
+import { google } from './models/google'
+import { openAI } from './models/open-ai'
+import { perplexity } from './models/perplexity'
+import { anthropic } from './models/anthropic'
 import { Params, Message, DistilledParams } from './types'
 import formatJSONSchema from './utils/format-json-schema'
 
@@ -80,6 +80,18 @@ export function initAI() {
           case '@OpenAI/o1-preview': {
             distilledParams.format = formatJSONSchema('OpenAI', distilledParams.format)
             result = openAI(model.split('/').slice(1).join('/'), distilledParams)
+            break
+          }
+          case '@Perplexity/Meta/llama-3.1-sonar-small-128k-online':
+          case '@Perplexity/Meta/llama-3.1-sonar-large-128k-online':
+          case '@Perplexity/Meta/llama-3.1-sonar-huge-128k-online': {
+            distilledParams.format = formatJSONSchema('OpenAI', distilledParams.format)
+            result = perplexity(model.split('/').slice(1).join('/'), distilledParams)
+            break
+          }
+          case '@Anthropic/claude-3-haiku-20240307': {
+            distilledParams.format = formatJSONSchema('OpenAI', distilledParams.format)
+            result = anthropic(model.split('/').slice(1).join('/'), distilledParams)
             break
           }
 

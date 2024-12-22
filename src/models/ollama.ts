@@ -52,7 +52,7 @@ export async function ollama(model: string, params: DistilledParams) {
           return { delta, total }
         })
       } else {
-        // console.log({ input: params.messages, output: res.message })
+        // consola.log({ input: params.messages, output: res.message })
         return res.message.content
       }
     }),
