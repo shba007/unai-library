@@ -19,5 +19,5 @@ export async function perplexity(model: string, params: DistilledParams) {
     responseType: params.stream ? 'stream' : undefined,
   })
 
-  return { content: res as Promise<string | ReadableStream<Uint8Array>> }
+  return { content: res as unknown as string | ReadableStream<{ delta: string; total: string }> }
 }
