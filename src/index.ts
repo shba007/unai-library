@@ -14,11 +14,12 @@ type OllamaModel =
   | '@Ollama/Meta/llama3.3'
   | '@Ollama/Meta/artifish/llama3.2-uncensored:latest'
 type GoogleModel = '@Google/gemini-1.0-pro' | '@Google/gemini-1.5-flash-8b' | '@Google/gemini-1.5-flash' | '@Google/gemini-1.5-pro'
-type OpenAIModel = '@OpenAI/gpt-3.5-turbo' | '@OpenAI/gpt-4-turbo' | '@OpenAI/gpt-4' | '@OpenAI/gpt-4o-mini' | '@OpenAI/gpt-4o' | '@OpenAI/o1-mini' | '@OpenAI/o1-preview'
+type OpenAILLMModel = '@OpenAI/gpt-3.5-turbo' | '@OpenAI/gpt-4-turbo' | '@OpenAI/gpt-4' | '@OpenAI/gpt-4o-mini' | '@OpenAI/gpt-4o' | '@OpenAI/o1-mini' | '@OpenAI/o1-preview'
+type OpenAIVoiceModel = '@OpenAI/whisper'
 type PerplexityModel = '@Perplexity/Meta/llama-3.1-sonar-small-128k-online' | '@Perplexity/Meta/llama-3.1-sonar-large-128k-online' | '@Perplexity/Meta/llama-3.1-sonar-huge-128k-online'
 type AnthropicModel = '@Anthropic/claude-3-haiku-20240307' | '@Anthropic/claude-3-haiku-20240307'
 
-type Model = OllamaModel | GoogleModel | OpenAIModel | PerplexityModel | AnthropicModel
+type Model = OllamaModel | GoogleModel | OpenAILLMModel | OpenAIVoiceModel | PerplexityModel | AnthropicModel
 
 interface AIResponse<T> {
   content:
@@ -80,6 +81,9 @@ export function initAI() {
           case '@OpenAI/o1-preview': {
             distilledParams.format = formatJSONSchema('OpenAI', distilledParams.format)
             result = openAI(model.split('/').slice(1).join('/'), distilledParams)
+            break
+          }
+          case '@OpenAI/whisper': {
             break
           }
           case '@Perplexity/Meta/llama-3.1-sonar-small-128k-online':
