@@ -3,6 +3,7 @@ import { google } from './models/google'
 import { openAI } from './models/open-ai'
 import { perplexity } from './models/perplexity'
 import { anthropic } from './models/anthropic'
+
 import { Params, Message, DistilledParams } from './types'
 import formatJSONSchema from './utils/format-json-schema'
 
@@ -34,14 +35,16 @@ export function initAI() {
   return {
     run: async <T = string>(model: Model, params: Params): Promise<AIResponse<T>> => {
       {
-        let result: Promise<{
-          content:
-            | string
-            | ReadableStream<{
-                delta: string
-                total: string
-              }>
-        }>
+        let result:
+          | Promise<{
+              content:
+                | string
+                | ReadableStream<{
+                    delta: string
+                    total: string
+                  }>
+            }>
+          | undefined = undefined
 
         params.messages = 'prompt' in params ? ([{ role: 'user', content: params.prompt }] as Message[]) : (params.messages as Message[])
 
@@ -103,6 +106,8 @@ export function initAI() {
             throw new Error('Enter a valid model name')
           }
         }
+
+        if (!result) throw new Error('result is undefined')
 
         const finalResult = await result
         const content = (params.format && !(finalResult.content instanceof ReadableStream) ? JSON.parse(finalResult.content) : finalResult.content) as T
