@@ -10,21 +10,81 @@
 
 > Unified AI Adapter Library. For Ollama, Gemini, Openai
 
+## How to Use
+
+Install package:
+
+<!-- automd:pm-install -->
+
+```sh
+# ✨ Auto-detect
+npx nypm install @shba007/unai
+
+# npm
+npm install @shba007/unai
+
+# yarn
+yarn add @shba007/unai
+
+# pnpm
+pnpm install @shba007/unai
+
+# bun
+bun install @shba007/unai
+```
+
+<!-- /automd -->
+
+Code:
+
+<!-- automd:jsimport cjs cdn name="pkg" -->
+
+**No Stream**
+
+```ts
+import { initAI } from '@shba007/unai'
+
+const ai = initAI()
+
+const result = await ai.run('@Google/gemini-1.5-flash-8b', {
+  prompt: 'What is the sky color',
+})
+
+console.log({ result: result.content })
+```
+
+**Stream**
+
+```ts
+import { initAI, readStream } from '@shba007/unai'
+
+const ai = initAI()
+
+const result = await ai.run('@Google/gemini-1.5-flash-8b', {
+  prompt: 'write 1 to 100',
+  stream: true,
+})
+
+readStream(result.content, ({ delta, total }) => {
+  process.stdout.write(delta)
+})
+```
+
 ## Todo
 
 | **Feature**                | **Ollama** | **Gemini** | **OpenAI** | **Perplexity** |
 | -------------------------- | ---------- | ---------- | ---------- | -------------- |
 | Streamed Response          | ✅         | ✅         | ✅         | ❌             |
-| JSON Mode                  | ✅         | ✅         | ✅         | ❌             |
-| Function Calling/Tool Use  | ❌         | ❌         | ❌         | ❌             |
-| Memory (STM/LTM)           | ❌         | ❌         | ❌         | ❌             |
 | Text (Unstructured) Input  | ✅         | ✅         | ✅         | ❌             |
 | Text (Structured) Input    | ✅         | ✅         | ✅         | ❌             |
 | Text (Unstructured) Output | ✅         | ✅         | ✅         | ❌             |
 | Text (Structured) Output   | ✅         | ✅         | ✅         | ❌             |
 | Document Input             | ❌         | ❌         | ❌         | ❌             |
 | Document Output            | ❌         | ❌         | ❌         | ❌             |
-| Image Input                | ❌         | ❌         | ❌         | ❌             |
+| Image Input                | ❌         | ❌         | ✅         | ❌             |
 | Image Output               | ❌         | ❌         | ❌         | ❌             |
 | Audio Input                | ❌         | ❌         | ❌         | ❌             |
 | Audio Output               | ❌         | ❌         | ❌         | ❌             |
+| JSON Mode                  | ✅         | ✅         | ✅         | ❌             |
+| Function Calling/Tool Use  | ❌         | ❌         | ❌         | ❌             |
+| Memory (STM/LTM)           | ❌         | ❌         | ❌         | ❌             |

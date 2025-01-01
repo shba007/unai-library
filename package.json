@@ -33,14 +33,14 @@
   },
   "packageManager": "pnpm@9.15.2",
   "scripts": {
-    "postinstall": "husky || true",
+    "prepare": "husky || true",
     "dev": "vitest dev",
     "detect": "gitleaks git --verbose",
     "lint": "eslint . --fix",
     "format": "prettier . --write",
     "test:types": "tsc --noEmit --skipLibCheck",
     "test": "pnpm lint && pnpm test:types && vitest run --coverage",
-    "play": "dotenvx run -- jiti playground",
+    "play": "dotenvx run -- jiti playground/notion",
     "build": "unbuild",
     "prepack": "pnpm build",
     "release": "pnpm test && changelogen --release && pnpm publish && git push --follow-tags",
@@ -48,6 +48,7 @@
     "unai": "jiti playground"
   },
   "dependencies": {
+    "@notionhq/client": "^2.2.15",
     "confbox": "^0.1.8",
     "consola": "^3.3.3",
     "ofetch": "^1.4.1",

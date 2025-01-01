@@ -10,7 +10,7 @@ export default function formatJSONSchema(model: 'Ollama' | 'Google' | 'OpenAI', 
   if (typeof obj === 'object' && obj !== null) {
     const updatedObj = {}
     for (const key in obj) {
-      if ((model === 'Google' && (key === 'required' || key === 'additionalProperties')) || key === '$schema' || key === 'minLength') {
+      if ((model === 'Google' && (key === 'required' || key === 'additionalProperties')) || key === '$schema' || key === 'format' || key === 'minLength') {
         continue
       }
       // @ts-ignore

@@ -1,3 +1,17 @@
+interface TextContent {
+  type: 'text'
+  text: string
+}
+interface ImageContent {
+  type: 'image_url'
+  image_url: string
+}
+
+export interface DetailedMessage {
+  role: 'assistant' | 'user'
+  content: (TextContent | ImageContent)[]
+}
+
 export interface Message {
   role: 'assistant' | 'user'
   content: string
@@ -24,7 +38,7 @@ export interface Tool {
 
 export interface BaseParams {
   stream?: boolean
-  format?: string | object
+  format?: object
   tools?: Tool[]
 }
 
@@ -34,14 +48,14 @@ export interface PromptParams extends BaseParams {
 }
 
 export interface MessageParams extends BaseParams {
-  messages: Message[] // Only messages are allowed
   prompt?: never
+  messages: (Message | DetailedMessage)[] // Only messages are allowed
 }
 
 export type Params = PromptParams | MessageParams
 
 export interface DistilledParams {
   stream: boolean
-  messages: Message[]
+  messages: DetailedMessage[]
   format: any
 }

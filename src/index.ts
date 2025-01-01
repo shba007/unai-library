@@ -4,8 +4,12 @@ import { openAI } from './models/open-ai'
 import { perplexity } from './models/perplexity'
 import { anthropic } from './models/anthropic'
 
-import { Params, Message, DistilledParams } from './types'
+import { createStorage } from 'unstorage'
+import fsDriver from 'unstorage/drivers/fs'
+
+import { Params, DistilledParams, DetailedMessage } from './types'
 import formatJSONSchema from './utils/format-json-schema'
+import zodToJsonSchema from 'zod-to-json-schema'
 
 type OllamaModel =
   | '@Ollama/Meta/llama3.2:1b'
@@ -31,9 +35,13 @@ interface AIResponse<T> {
       }>
 }
 
+export const storage = createStorage({
+  driver: fsDriver({ base: '.' }), // Specify your base path
+})
+
 export function initAI() {
   return {
-    run: async <T = string>(model: Model, params: Params): Promise<AIResponse<T>> => {
+    run: async <T = string>(model: Model, params: Params) => {
       {
         let result:
           | Promise<{
@@ -46,12 +54,27 @@ export function initAI() {
             }>
           | undefined = undefined
 
-        params.messages = 'prompt' in params ? ([{ role: 'user', content: params.prompt }] as Message[]) : (params.messages as Message[])
+        params.messages =
+          'prompt' in params
+            ? ([{ role: 'user', content: [{ type: 'text', text: params.prompt }] }] as DetailedMessage[])
+            : params.messages.map<DetailedMessage>(({ role, content }) =>
+                typeof content === 'string'
+                  ? {
+                      role,
+                      content: [
+                        {
+                          type: 'text',
+                          text: content as string,
+                        },
+                      ],
+                    }
+                  : { role, content }
+              )
 
         const distilledParams: DistilledParams = {
           stream: params.stream ?? false,
-          messages: params.messages,
-          format: params.format,
+          messages: params.messages as DetailedMessage[],
+          format: zodToJsonSchema(params.format as Zod.AnyZodObject),
         }
 
         if (distilledParams.messages.length <= 0) throw new Error('Messages should at least be one')
@@ -112,10 +135,21 @@ export function initAI() {
         const finalResult = await result
         const content = (params.format && !(finalResult.content instanceof ReadableStream) ? JSON.parse(finalResult.content) : finalResult.content) as T
 
-        return {
-          content,
-        }
+        return finalResult.content instanceof ReadableStream
+          ? ({
+              content,
+            } as {
+              content: ReadableStream<{
+                delta: string
+                total: string
+              }>
+            })
+          : ({
+              content,
+            } as { content: T })
       }
     },
   }
 }
+
+export { default as readStream } from './utils/read-stream'

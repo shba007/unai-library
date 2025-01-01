@@ -1,7 +1,10 @@
 import { $fetch } from 'ofetch'
 import { env } from 'std-env'
+
 import type { DistilledParams } from '../types'
 import pipeStream from '../utils/pipe-stream'
+import convertToBase64 from '../utils/convert-to-base64'
+// import fs from "node:fs";
 
 interface OpenAIResponse {
   id: string
@@ -36,6 +39,40 @@ interface OpenAIResponse {
 const OPENAI_BASE_URL = 'https://api.openai.com/v1'
 
 export async function openAI(model: string, params: DistilledParams) {
+  const messages = await Promise.all(
+    params.messages.map(async ({ role, content }) => ({
+      role,
+      content: await Promise.all(
+        content.map(async (content) => {
+          if (content.type != 'image_url') return content
+
+          return {
+            type: 'image_url',
+            image_url: { url: await convertToBase64(content.image_url, false) },
+          }
+        })
+      ),
+    }))
+  )
+  const body = {
+    model,
+    stream: params.stream,
+    ...(params.format
+      ? {
+          response_format: {
+            type: 'json_schema',
+            json_schema: {
+              name: 'unique_response',
+              strict: true,
+              schema: params.format,
+            },
+          },
+        }
+      : {}),
+    messages,
+  }
+  // fs.writeFileSync('./dump-body.json', JSON.stringify(body, undefined, 2))
+
   // consola.log(JSON.stringify(params.format))
   const res = $fetch<OpenAIResponse | ReadableStream<Uint8Array>>('/chat/completions', {
     baseURL: OPENAI_BASE_URL,
@@ -43,25 +80,12 @@ export async function openAI(model: string, params: DistilledParams) {
       Authorization: `Bearer ${env.OPENAI_API_KEY}`,
     },
     method: 'POST',
-    body: {
-      model,
-      stream: params.stream,
-      ...(params.format
-        ? {
-            response_format: {
-              type: 'json_schema',
-              json_schema: {
-                name: 'unique_response',
-                strict: true,
-                schema: params.format,
-              },
-            },
-          }
-        : {}),
-      messages: params.messages,
-    },
+    body,
     // @ts-ignore
     responseType: params.stream ? 'stream' : undefined,
+    onResponseError({ response }) {
+      throw new Error('OpenAI Fetch Failed', response.status)
+    },
   })
 
   return {

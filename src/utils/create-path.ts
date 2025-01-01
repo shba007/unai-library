@@ -1,26 +1,21 @@
-import fs from 'node:fs'
 import path from 'pathe'
+import { storage } from '..'
 
 /**
- * Recursively creates files and folders for a given path.
+ * Recursively creates files and folders for a given path using Unstorage.
  * @param {string} targetPath - The target path to create.
  */
-export default function (targetPath: string) {
+export default async function (targetPath: string) {
   const dirs = targetPath.split(path.sep)
   let currentPath = ''
 
   for (const dir of dirs) {
     currentPath = path.join(currentPath, dir)
 
-    if (!fs.existsSync(currentPath)) {
-      // Check if the current part is a file or directory
-      if (path.extname(currentPath)) {
-        // If it's a file, create it and break out
-        fs.writeFileSync(currentPath, '', { flag: 'w' })
-      } else {
-        // If it's a directory, create it
-        fs.mkdirSync(currentPath)
-      }
+    const exists = await storage.hasItem(currentPath)
+    if (!exists) {
+      // Check if the current part is a file or directory and create it accordingly
+      await storage.setItem(path.extname(currentPath) ? currentPath : currentPath + '/', '')
     }
   }
 
