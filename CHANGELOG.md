@@ -1,5 +1,11 @@
 # unai
 
+## 0.2.0
+
+### Minor Changes
+
+- e4b5dab: feat: add example scripts and added image support for openai
+
 ## 0.1.1
 
 ### Patch Changes
