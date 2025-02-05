@@ -1,15 +1,10 @@
 # unai
 
-## 0.3.0
-
-### Minor Changes
-
-- 4ae3d62: feat: add new example scripts for audio and image generation, add new openai models
-
 ## 0.2.0
 
 ### Minor Changes
 
+- 4ae3d62: feat: add new example scripts for audio and image generation, add new openai models
 - e4b5dab: feat: add example scripts and added image support for openai
 
 ## 0.1.1
