@@ -1,6 +1,6 @@
 import { $fetch } from 'ofetch'
 import pathe from 'pathe'
-import { storage } from '..'
+import { storage } from '../storage'
 
 /**
  * Converts a file path or URL to a Base64-encoded string.
@@ -15,7 +15,7 @@ export default async function (path: string, convertUrl = true): Promise<string>
     if (path.startsWith('file://')) {
       // Handle file path
       const filePath = path.slice(7) // Remove 'file://' prefix
-      const fileBuffer = (await storage.getItemRaw(filePath)) as ArrayBuffer
+      const fileBuffer = (await storage.getItemRaw(pathe.resolve(filePath))) as ArrayBuffer
       if (!fileBuffer) {
         throw new Error(`File not found: ${filePath}`)
       }

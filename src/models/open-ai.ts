@@ -1,10 +1,10 @@
+import fs from 'node:fs'
 import { $fetch } from 'ofetch'
 import { env } from 'std-env'
 
 import type { DistilledParams } from '../types'
 import pipeStream from '../utils/pipe-stream'
 import convertToBase64 from '../utils/convert-to-base64'
-// import fs from "node:fs";
 
 interface OpenAIResponse {
   id: string
@@ -38,20 +38,27 @@ interface OpenAIResponse {
 
 const OPENAI_BASE_URL = 'https://api.openai.com/v1'
 
+/* [
+  { "type": "text", "text": "What's in this image?" },
+  {
+    "type": "image_url",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg",
+  },
+] */
+
 export async function openAI(model: string, params: DistilledParams) {
   const messages = await Promise.all(
     params.messages.map(async ({ role, content }) => ({
       role,
-      content: await Promise.all(
-        content.map(async (content) => {
-          if (content.type != 'image_url') return content
-
+      content: await Promise.all([
+        { type: 'text', text: content.text },
+        ...content.images.map(async (url) => {
           return {
             type: 'image_url',
-            image_url: { url: await convertToBase64(content.image_url, false) },
+            image_url: { url: await convertToBase64(url) },
           }
-        })
-      ),
+        }),
+      ]),
     }))
   )
   const body = {
@@ -71,7 +78,7 @@ export async function openAI(model: string, params: DistilledParams) {
       : {}),
     messages,
   }
-  // fs.writeFileSync('./dump-body.json', JSON.stringify(body, undefined, 2))
+  fs.writeFileSync('./dump-body.json', JSON.stringify(body, undefined, 2))
 
   // consola.log(JSON.stringify(params.format))
   const res = $fetch<OpenAIResponse | ReadableStream<Uint8Array>>('/chat/completions', {
@@ -83,8 +90,8 @@ export async function openAI(model: string, params: DistilledParams) {
     body,
     // @ts-ignore
     responseType: params.stream ? 'stream' : undefined,
-    onResponseError({ response }) {
-      throw new Error('OpenAI Fetch Failed', response.status)
+    onResponseError({ response, error }) {
+      throw new Error(`OpenAI Fetch Failed ${response.status} ${response.statusText}`)
     },
   })
 

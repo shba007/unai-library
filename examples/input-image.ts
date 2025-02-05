@@ -2,7 +2,7 @@ import { initAI } from '../src'
 
 const ai = initAI()
 
-const result = await ai.run('@Google/gemini-1.5-flash-8b', {
+const result = await ai.run('image-caption', '@OpenAI/o1:2024-12-17', {
   messages: [
     {
       role: 'user',

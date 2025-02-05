@@ -88,3 +88,17 @@ readStream(result.content, ({ delta, total }) => {
 | JSON Mode                  | ✅         | ✅         | ✅         | ❌             |
 | Function Calling/Tool Use  | ❌         | ❌         | ❌         | ❌             |
 | Memory (STM/LTM)           | ❌         | ❌         | ❌         | ❌             |
+
+# Structured Output Support
+
+- gpt-4o-mini-2024-07-18 and later
+- gpt-4o-2024-08-06 and later
+- o1-2024-12-17 and later
+- o3-mini-2025-1-31 and later
+
+# Input Image Support
+
+- gpt-4o-mini-2024-07-18 and later
+- gpt-4o-2024-08-06 and later
+- o1-2024-12-17 and later
+- o3-mini-2025-1-31 and later

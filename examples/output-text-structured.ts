@@ -1,6 +1,6 @@
+import { exit } from 'node:process'
 import { z } from 'zod'
 import { initAI } from '../src'
-import { exit } from 'node:process'
 
 const ai = initAI()
 
@@ -14,7 +14,7 @@ const responseSchema = z.object({
   ),
 })
 
-const result = await ai.run<z.infer<typeof responseSchema>>('@Google/gemini-1.5-flash-8b', {
+const result = await ai.run<z.infer<typeof responseSchema>>('text-generation', '@OpenAI/o1:2024-12-17', {
   prompt: 'What is the sky color in every 6 hour',
   stream: false,
   format: responseSchema,

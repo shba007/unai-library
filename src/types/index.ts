@@ -1,19 +1,12 @@
-interface TextContent {
-  type: 'text'
-  text: string
-}
-interface ImageContent {
-  type: 'image_url'
-  image_url: string
-}
+export type Role = 'system' | 'user' | 'developer' | 'assistant'
 
 export interface DetailedMessage {
-  role: 'assistant' | 'user'
-  content: (TextContent | ImageContent)[]
+  role: Role
+  content: { audios?: string[]; text?: string; images?: string[] }
 }
 
-export interface Message {
-  role: 'assistant' | 'user'
+export interface BasicMessage {
+  role: Role
   content: string
 }
 
@@ -49,13 +42,18 @@ export interface PromptParams extends BaseParams {
 
 export interface MessageParams extends BaseParams {
   prompt?: never
-  messages: (Message | DetailedMessage)[] // Only messages are allowed
+  messages: (BasicMessage | DetailedMessage)[] // Only messages are allowed
 }
 
 export type Params = PromptParams | MessageParams
 
+export interface DistilledDetailedMessage {
+  role: Role
+  content: { audios: string[]; text: string; images: string[] }
+}
+
 export interface DistilledParams {
   stream: boolean
-  messages: DetailedMessage[]
+  messages: DistilledDetailedMessage[]
   format: any
 }
