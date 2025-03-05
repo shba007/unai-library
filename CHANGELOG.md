@@ -1,5 +1,11 @@
 # unai
 
+## 0.2.3
+
+### Patch Changes
+
+- 67ed408: refactor: add debug callback to API functions for enhanced logging
+
 ## 0.2.2
 
 ### Patch Changes
