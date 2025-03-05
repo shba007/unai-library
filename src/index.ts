@@ -104,6 +104,10 @@ export function initAI() {
 
         if (distilledParams.messages.length <= 0) throw new Error('Messages should at least be one')
 
+        function debugCallback(body: object) {
+          // fs.writeFileSync('./dump-body.json', JSON.stringify(body, undefined, 2))
+        }
+
         switch (model) {
           case '@Ollama/Meta/llama3.2:1b':
           case '@Ollama/Meta/llama3.2:3b':
@@ -112,7 +116,7 @@ export function initAI() {
           case '@Ollama/Meta/llama3.3':
           case '@Ollama/Meta/artifish/llama3.2-uncensored:latest': {
             distilledParams.format = formatJSONSchema('Ollama', distilledParams.format)
-            result = ollama(model.split('/').slice(2).join('/'), distilledParams)
+            result = ollama(model.split('/').slice(2).join('/'), distilledParams, debugCallback)
             break
           }
           case '@Google/gemini-1.0-pro':
@@ -120,7 +124,7 @@ export function initAI() {
           case '@Google/gemini-1.5-flash':
           case '@Google/gemini-1.5-pro': {
             distilledParams.format = formatJSONSchema('Google', distilledParams.format)
-            result = google(model.split('/').slice(-1).join('/'), distilledParams)
+            result = google(model.split('/').slice(-1).join('/'), distilledParams, debugCallback)
             break
           }
           case '@OpenAI/gpt-3.5-turbo:instruct':
@@ -151,7 +155,7 @@ export function initAI() {
           case '@OpenAI/o3-mini:latest': {
             distilledParams.format = formatJSONSchema('OpenAI', distilledParams.format)
             const modelName = model.split('/').slice(1).join('/').replace(':latest', '').replace(':', '-')
-            result = openAI(modelName, distilledParams)
+            result = openAI(modelName, distilledParams, debugCallback)
             break
           }
           case '@Perplexity/llama-3.1-sonar-small-128k-online':
@@ -162,12 +166,12 @@ export function initAI() {
           case '@Perplexity/sonar-reasoning':
           case '@Perplexity/sonar-reasoning-pro': {
             // distilledParams.format = formatJSONSchema('OpenAI', distilledParams.format)
-            result = perplexity(model.split('/').slice(1).join('/'), distilledParams)
+            result = perplexity(model.split('/').slice(1).join('/'), distilledParams, debugCallback)
             break
           }
           case '@Anthropic/claude-3-haiku-20240307': {
             distilledParams.format = formatJSONSchema('OpenAI', distilledParams.format)
-            result = anthropic(model.split('/').slice(1).join('/'), distilledParams)
+            result = anthropic(model.split('/').slice(1).join('/'), distilledParams, debugCallback)
             break
           }
 

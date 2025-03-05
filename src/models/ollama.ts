@@ -20,20 +20,23 @@ interface OllamaResponse {
   eval_duration: number
 }
 
-export async function ollama(model: string, params: DistilledParams) {
+export async function ollama(model: string, params: DistilledParams, debugCallback?: (body: object) => void) {
+  const body = {
+    model,
+    stream: params.stream,
+    ...(params.format
+      ? {
+          format: params.format,
+        }
+      : {}),
+    messages: params.messages,
+  }
+  if (debugCallback) debugCallback(body)
+
   const res = $fetch<OllamaResponse | ReadableStream<Uint8Array>>('/api/chat', {
     baseURL: env.OLLAMA_BASE_URL ?? 'http://localhost:11434',
     method: 'POST',
-    body: {
-      model,
-      stream: params.stream,
-      ...(params.format
-        ? {
-            format: params.format,
-          }
-        : {}),
-      messages: params.messages,
-    },
+    body,
     // @ts-ignore
     responseType: params.stream ? 'stream' : undefined,
   })

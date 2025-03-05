@@ -30,13 +30,13 @@ export interface Delta {
   content: string
 }
 
-export async function perplexity(model: string, params: DistilledParams) {
+export async function perplexity(model: string, params: DistilledParams, debugCallback?: (body: object) => void) {
   const body = {
     model,
     stream: params.stream,
     messages: params.messages.map(({ role, content }) => ({ role, content: content.text })),
   }
-  // fs.writeFileSync('./dump-body.json', JSON.stringify(body, undefined, 2))
+  if (debugCallback) debugCallback(body)
 
   const res = $fetch<PerplexityResponse | ReadableStream<Uint8Array>>('/chat/completions', {
     baseURL: PERPLEXITY_BASE_URL,

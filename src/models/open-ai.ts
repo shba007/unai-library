@@ -45,7 +45,7 @@ const OPENAI_BASE_URL = 'https://api.openai.com/v1'
   },
 ] */
 
-export async function openAI(model: string, params: DistilledParams) {
+export async function openAI(model: string, params: DistilledParams, debugCallback?: (body: object) => void) {
   const messages = await Promise.all(
     params.messages.map(async ({ role, content }) => ({
       role,
@@ -77,7 +77,7 @@ export async function openAI(model: string, params: DistilledParams) {
       : {}),
     messages,
   }
-  // fs.writeFileSync('./dump-body.json', JSON.stringify(body, undefined, 2))
+  if (debugCallback) debugCallback(body)
 
   const res = $fetch<OpenAIResponse | ReadableStream<Uint8Array>>('/chat/completions', {
     baseURL: OPENAI_BASE_URL,

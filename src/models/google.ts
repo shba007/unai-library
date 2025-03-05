@@ -26,7 +26,7 @@ interface GeminiResponse {
 
 const GEMINI_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/models'
 
-export async function google(model: string, params: DistilledParams) {
+export async function google(model: string, params: DistilledParams, debugCallback?: (body: object) => void) {
   const body = {
     ...(params.format
       ? {
@@ -42,7 +42,7 @@ export async function google(model: string, params: DistilledParams) {
       },
     ],
   }
-  // fs.writeFileSync('./dump-body.json', JSON.stringify(body, undefined, 2))
+  if (debugCallback) debugCallback(body)
 
   const res = $fetch<GeminiResponse | ReadableStream<Uint8Array>>(`/${model}:${params.stream ? 'streamGenerateContent' : 'generateContent'}`, {
     baseURL: GEMINI_BASE_URL,
