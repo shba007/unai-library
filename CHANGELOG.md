@@ -1,5 +1,11 @@
 # unai
 
+## 0.2.1
+
+### Patch Changes
+
+- 6108295: refactor: replace pipeStream with mapStream for improved stream handling and update example scripts
+
 ## 0.2.0
 
 ### Minor Changes
