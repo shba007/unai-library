@@ -79,7 +79,6 @@ export async function openAI(model: string, params: DistilledParams) {
   }
   // fs.writeFileSync('./dump-body.json', JSON.stringify(body, undefined, 2))
 
-  // consola.log(JSON.stringify(params.format))
   const res = $fetch<OpenAIResponse | ReadableStream<Uint8Array>>('/chat/completions', {
     baseURL: OPENAI_BASE_URL,
     headers: {

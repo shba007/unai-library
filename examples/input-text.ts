@@ -2,7 +2,7 @@ import { initAI } from '../src'
 
 const ai = initAI()
 
-const result = await ai.run('text-generation', '@Ollama/Meta/llama3.2:3b', {
+const result = await ai.run('text-generation', '@Google/gemini-1.5-pro', {
   messages: [
     {
       role: 'system',

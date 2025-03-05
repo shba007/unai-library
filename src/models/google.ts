@@ -1,5 +1,7 @@
 import { $fetch } from 'ofetch'
 import { env } from 'std-env'
+import fs from 'node:fs'
+
 import { DistilledParams } from '../types'
 import mapStream from '../utils/map-stream'
 
@@ -25,7 +27,23 @@ interface GeminiResponse {
 const GEMINI_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/models'
 
 export async function google(model: string, params: DistilledParams) {
-  // consola.log({ format: JSON.stringify(formatJSONSchema(params.format)) });
+  const body = {
+    ...(params.format
+      ? {
+          generationConfig: {
+            response_mime_type: 'application/json',
+            response_schema: params.format,
+          },
+        }
+      : {}),
+    contents: [
+      {
+        parts: params.messages.map(({ content }) => ({ text: content.text })),
+      },
+    ],
+  }
+  // fs.writeFileSync('./dump-body.json', JSON.stringify(body, undefined, 2))
+
   const res = $fetch<GeminiResponse | ReadableStream<Uint8Array>>(`/${model}:${params.stream ? 'streamGenerateContent' : 'generateContent'}`, {
     baseURL: GEMINI_BASE_URL,
     method: 'POST',
@@ -33,21 +51,7 @@ export async function google(model: string, params: DistilledParams) {
       key: env.GEMINI_API_KEY,
       ...(params.stream ? { alt: 'sse' } : {}),
     },
-    body: {
-      ...(params.format
-        ? {
-            generationConfig: {
-              response_mime_type: 'application/json',
-              response_schema: params.format,
-            },
-          }
-        : {}),
-      contents: [
-        {
-          parts: params.messages.map(({ content }) => ({ text: content })),
-        },
-      ],
-    },
+    body,
     // @ts-ignore
     responseType: params.stream ? 'stream' : undefined,
   })

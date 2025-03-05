@@ -36,6 +36,7 @@ export async function perplexity(model: string, params: DistilledParams) {
     stream: params.stream,
     messages: params.messages.map(({ role, content }) => ({ role, content: content.text })),
   }
+  // fs.writeFileSync('./dump-body.json', JSON.stringify(body, undefined, 2))
 
   const res = $fetch<PerplexityResponse | ReadableStream<Uint8Array>>('/chat/completions', {
     baseURL: PERPLEXITY_BASE_URL,
@@ -50,7 +51,6 @@ export async function perplexity(model: string, params: DistilledParams) {
       throw new Error(`Perplexity Fetch Failed ${response.status} ${response.statusText}`)
     },
   })
-  // fs.writeFileSync('./dump-body.json', JSON.stringify(body, undefined, 2))
 
   return {
     content: await res.then((res) => {

@@ -120,7 +120,7 @@ export function initAI() {
           case '@Google/gemini-1.5-flash':
           case '@Google/gemini-1.5-pro': {
             distilledParams.format = formatJSONSchema('Google', distilledParams.format)
-            result = google(model.split('/').slice(2).join('/'), distilledParams)
+            result = google(model.split('/').slice(-1).join('/'), distilledParams)
             break
           }
           case '@OpenAI/gpt-3.5-turbo:instruct':

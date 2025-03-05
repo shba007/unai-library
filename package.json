@@ -40,7 +40,7 @@
     "format": "prettier . --write",
     "test:types": "tsc --noEmit --skipLibCheck",
     "test": "pnpm lint && pnpm test:types && vitest run --coverage",
-    "play": "dotenvx run -- jiti examples/input-image",
+    "play": "dotenvx run -- jiti examples/input-text",
     "build": "unbuild",
     "prepack": "pnpm build",
     "release": "pnpm test && changelogen --release && pnpm publish && git push --follow-tags",
