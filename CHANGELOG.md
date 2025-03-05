@@ -1,5 +1,11 @@
 # unai
 
+## 0.2.2
+
+### Patch Changes
+
+- c983319: refactor: update model references and streamline request body construction for Google and OpenAI APIs
+
 ## 0.2.1
 
 ### Patch Changes
