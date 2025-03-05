@@ -1,5 +1,11 @@
 # unai
 
+## 0.2.4
+
+### Patch Changes
+
+- 9594df9: feat: add debug callback to AI run function for enhanced logging
+
 ## 0.2.3
 
 ### Patch Changes
