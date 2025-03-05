@@ -2,7 +2,7 @@ export type Role = 'system' | 'user' | 'developer' | 'assistant'
 
 export interface DetailedMessage {
   role: Role
-  content: { audios?: string[]; text?: string; images?: string[] }
+  content: { audios?: (string | Buffer<ArrayBufferLike>)[]; text?: string; images?: string[] }
 }
 
 export interface BasicMessage {

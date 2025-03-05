@@ -3,8 +3,8 @@ import { initAI, readStream } from '../src'
 
 const ai = initAI()
 
-const result = await ai.run('text-generation', '@OpenAI/o1-mini:2024-09-12', {
-  prompt: 'Write 1 to 100',
+const result = await ai.run('text-generation', '@OpenAI/o3-mini:latest', {
+  prompt: 'Write 1 to 101',
   stream: true,
 })
 

@@ -47,7 +47,15 @@ type OpenAILLMModel =
   | '@OpenAI/o3-mini:2025-01-31'
   | '@OpenAI/o3-mini:latest'
 type OpenAIVoiceModel = '@OpenAI/whisper'
-type PerplexityModel = '@Perplexity/Meta/llama-3.1-sonar-small-128k-online' | '@Perplexity/Meta/llama-3.1-sonar-large-128k-online' | '@Perplexity/Meta/llama-3.1-sonar-huge-128k-online'
+
+type PerplexityModel =
+  | '@Perplexity/llama-3.1-sonar-small-128k-online'
+  | '@Perplexity/llama-3.1-sonar-large-128k-online'
+  | '@Perplexity/llama-3.1-sonar-huge-128k-online'
+  | '@Perplexity/sonar'
+  | '@Perplexity/sonar-pro'
+  | '@Perplexity/sonar-reasoning'
+  | '@Perplexity/sonar-reasoning-pro'
 type AnthropicModel = '@Anthropic/claude-3-haiku-20240307' | '@Anthropic/claude-3-haiku-20240307'
 
 type Model = OllamaModel | GoogleModel | OpenAILLMModel | OpenAIVoiceModel | PerplexityModel | AnthropicModel
@@ -146,13 +154,14 @@ export function initAI() {
             result = openAI(modelName, distilledParams)
             break
           }
-          case '@OpenAI/whisper': {
-            break
-          }
-          case '@Perplexity/Meta/llama-3.1-sonar-small-128k-online':
-          case '@Perplexity/Meta/llama-3.1-sonar-large-128k-online':
-          case '@Perplexity/Meta/llama-3.1-sonar-huge-128k-online': {
-            distilledParams.format = formatJSONSchema('OpenAI', distilledParams.format)
+          case '@Perplexity/llama-3.1-sonar-small-128k-online':
+          case '@Perplexity/llama-3.1-sonar-large-128k-online':
+          case '@Perplexity/llama-3.1-sonar-huge-128k-online':
+          case '@Perplexity/sonar':
+          case '@Perplexity/sonar-pro':
+          case '@Perplexity/sonar-reasoning':
+          case '@Perplexity/sonar-reasoning-pro': {
+            // distilledParams.format = formatJSONSchema('OpenAI', distilledParams.format)
             result = perplexity(model.split('/').slice(1).join('/'), distilledParams)
             break
           }

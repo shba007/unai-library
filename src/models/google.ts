@@ -1,7 +1,7 @@
 import { $fetch } from 'ofetch'
 import { env } from 'std-env'
 import { DistilledParams } from '../types'
-import pipeStream from '../utils/pipe-stream'
+import mapStream from '../utils/map-stream'
 
 interface GeminiResponse {
   candidates: {
@@ -58,7 +58,7 @@ export async function google(model: string, params: DistilledParams) {
         let delta: string
         let total: string
 
-        return pipeStream<{ delta: string; total: string }>(res, (data: GeminiResponse) => {
+        return mapStream<{ delta: string; total: string }>(res, (data: GeminiResponse) => {
           const value = data.candidates.map(({ content }) => content.parts[0].text).at(-1)!
           delta = value
           total = (total ?? '') + value

@@ -2,13 +2,15 @@ import { initAI } from '../src'
 
 const ai = initAI()
 
-const result = await ai.run('image-caption', '@OpenAI/o1:2024-12-17', {
+const imageIds = ['4e76ccc5-8381-4b21-be22-636808e7b7c8', 'a9193fed-769a-47bd-ac70-afceb8ff5295']
+
+const result = await ai.run('image-caption', '@OpenAI/o1:latest', {
   messages: [
     {
       role: 'user',
       content: {
-        text: 'What is the sky color in this image',
-        images: ['https://t4.ftcdn.net/jpg/01/62/69/25/360_F_162692511_SidIKVCDnt5UKHPNqpCb2MSKvfBlx1lG.jpg'],
+        text: 'Write the alt text for seo for each image',
+        images: imageIds.map((id) => `https://ucarecdn.com/${id}/-/format/auto/-/quality/smart/-/scale_crop/1280x1920/center/`),
       },
     },
   ],

@@ -2,10 +2,10 @@ import { initAI } from '../src'
 
 const ai = initAI()
 
-const result = await ai.run('text-generation', '@OpenAI/o1-mini:2024-09-12', {
+const result = await ai.run('text-generation', '@Ollama/Meta/llama3.2:3b', {
   messages: [
     {
-      role: 'user',
+      role: 'system',
       content: 'reply in one word',
     },
     {

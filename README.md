@@ -72,22 +72,35 @@ readStream(result.content, ({ delta, total }) => {
 
 ## Todo
 
-| **Feature**                | **Ollama** | **Gemini** | **OpenAI** | **Perplexity** |
-| -------------------------- | ---------- | ---------- | ---------- | -------------- |
-| Streamed Response          | ✅         | ✅         | ✅         | ❌             |
-| Text (Unstructured) Input  | ✅         | ✅         | ✅         | ❌             |
-| Text (Structured) Input    | ✅         | ✅         | ✅         | ❌             |
-| Text (Unstructured) Output | ✅         | ✅         | ✅         | ❌             |
-| Text (Structured) Output   | ✅         | ✅         | ✅         | ❌             |
-| Document Input             | ❌         | ❌         | ❌         | ❌             |
-| Document Output            | ❌         | ❌         | ❌         | ❌             |
-| Image Input                | ❌         | ❌         | ✅         | ❌             |
-| Image Output               | ❌         | ❌         | ❌         | ❌             |
-| Audio Input                | ❌         | ❌         | ❌         | ❌             |
-| Audio Output               | ❌         | ❌         | ❌         | ❌             |
-| JSON Mode                  | ✅         | ✅         | ✅         | ❌             |
-| Function Calling/Tool Use  | ❌         | ❌         | ❌         | ❌             |
-| Memory (STM/LTM)           | ❌         | ❌         | ❌         | ❌             |
+| **Feature**                | **Ollama** | **Gemini** | **OpenAI** | **Perplexity** | **Anthropic** |
+| -------------------------- | ---------- | ---------- | ---------- | -------------- | ------------- |
+| Text (Unstructured) Input  | ✅         | ✅         | ✅         | ✅             | ❌            |
+| Text (Structured) Input    | ✅         | ✅         | ✅         | ❌             | ❌            |
+| Text (Unstructured) Output | ✅         | ✅         | ✅         | ❌             | ❌            |
+| Text (Structured) Output   | ✅         | ✅         | ✅         | ❌             | ❌            |
+| Streamed Response          | ✅         | ✅         | ✅         | ❌             | ❌            |
+| Document Input             | ❌         | ❌         | ❌         | ❌             | ❌            |
+| Document Output            | ❌         | ❌         | ❌         | ❌             | ❌            |
+| Image Input                | ❌         | ❌         | ✅         | ❌             | ❌            |
+| Image Output               | ❌         | ❌         | ❌         | ❌             | ❌            |
+| Audio Input                | ❌         | ❌         | ❌         | ❌             | ❌            |
+| Audio Output               | ❌         | ❌         | ❌         | ❌             | ❌            |
+| JSON Mode                  | ✅         | ✅         | ✅         | ❌             | ❌            |
+| Function Calling/Tool Use  | ❌         | ❌         | ❌         | ❌             | ❌            |
+| Memory (STM/LTM)           | ❌         | ❌         | ❌         | ❌             | ❌            |
+
+# System Role Support
+
+<!-- - @OpenAI/o1-mini:2024-09-12
+- @OpenAI/o1-mini:latest
+- @OpenAI/o1-preview:2024-09-12
+- @OpenAI/o1-preview:latest -->
+
+- @OpenAI/o1:2024-12-17
+- @OpenAI/o1:latest
+- @OpenAI/o3-mini:2025-01-31
+- @OpenAI/o3-mini:latest
+- @Perplexity/sonar
 
 # Structured Output Support
 
@@ -101,4 +114,3 @@ readStream(result.content, ({ delta, total }) => {
 - gpt-4o-mini-2024-07-18 and later
 - gpt-4o-2024-08-06 and later
 - o1-2024-12-17 and later
-- o3-mini-2025-1-31 and later

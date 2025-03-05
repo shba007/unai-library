@@ -1,9 +1,8 @@
-import fs from 'node:fs'
 import { $fetch } from 'ofetch'
 import { env } from 'std-env'
 
 import type { DistilledParams } from '../types'
-import pipeStream from '../utils/pipe-stream'
+import mapStream from '../utils/map-stream'
 import convertToBase64 from '../utils/convert-to-base64'
 
 interface OpenAIResponse {
@@ -78,7 +77,7 @@ export async function openAI(model: string, params: DistilledParams) {
       : {}),
     messages,
   }
-  fs.writeFileSync('./dump-body.json', JSON.stringify(body, undefined, 2))
+  // fs.writeFileSync('./dump-body.json', JSON.stringify(body, undefined, 2))
 
   // consola.log(JSON.stringify(params.format))
   const res = $fetch<OpenAIResponse | ReadableStream<Uint8Array>>('/chat/completions', {
@@ -101,7 +100,7 @@ export async function openAI(model: string, params: DistilledParams) {
         let delta: string
         let total: string
 
-        return pipeStream<{ delta: string; total: string }>(res, (data: OpenAIResponse) => {
+        return mapStream<{ delta: string; total: string }>(res, (data: OpenAIResponse) => {
           // consola.log({ choices: data.choices.at(-1) })
           const value = data.choices.at(-1)!.delta?.content ?? ''
           // consola.log({ value })

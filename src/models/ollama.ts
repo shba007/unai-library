@@ -1,7 +1,7 @@
 import { $fetch } from 'ofetch'
 import { env } from 'std-env'
 import { DistilledParams } from '../types'
-import pipeStream from '../utils/pipe-stream'
+import mapStream from '../utils/map-stream'
 
 interface OllamaResponse {
   model: string
@@ -44,7 +44,7 @@ export async function ollama(model: string, params: DistilledParams) {
         let delta: string
         let total: string
 
-        return pipeStream<{ delta: string; total: string }>(res, (data: OllamaResponse) => {
+        return mapStream<{ delta: string; total: string }>(res, (data: OllamaResponse) => {
           const value = data.message.content
           delta = value
           total = (total ?? '') + value
