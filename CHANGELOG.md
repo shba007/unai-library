@@ -1,5 +1,11 @@
 # unai
 
+## 0.2.5
+
+### Patch Changes
+
+- 8adaab4: fix: wrap stream reading in a promise to ensure proper resolution
+
 ## 0.2.4
 
 ### Patch Changes
