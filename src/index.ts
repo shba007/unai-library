@@ -71,7 +71,7 @@ interface AIResponse<T> {
 
 export function initAI() {
   return {
-    run: async <T = string>(task: Task, model: Model, params: Params) => {
+    run: async <T = string>(task: Task, model: Model, params: Params, debugCallback?: (body: object) => void) => {
       {
         let result:
           | Promise<{
@@ -103,10 +103,6 @@ export function initAI() {
         }
 
         if (distilledParams.messages.length <= 0) throw new Error('Messages should at least be one')
-
-        function debugCallback(body: object) {
-          // fs.writeFileSync('./dump-body.json', JSON.stringify(body, undefined, 2))
-        }
 
         switch (model) {
           case '@Ollama/Meta/llama3.2:1b':
