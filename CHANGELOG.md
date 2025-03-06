@@ -1,5 +1,11 @@
 # unai
 
+## 0.2.6
+
+### Patch Changes
+
+- edef46e: fix: improve stream processing by buffering incomplete chunks and handling parsing errors
+
 ## 0.2.5
 
 ### Patch Changes
