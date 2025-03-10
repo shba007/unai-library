@@ -1,5 +1,11 @@
 # unai
 
+## 0.3.0
+
+### Minor Changes
+
+- 7d8f383: feat: add audio transcription functionality and update example files
+
 ## 0.2.6
 
 ### Patch Changes
