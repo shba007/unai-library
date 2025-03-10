@@ -1,11 +1,12 @@
 import { $fetch } from 'ofetch'
 import { env } from 'std-env'
+import { fileTypeFromBuffer } from 'file-type'
 
-import type { DistilledParams } from '../types'
+import type { DistilledParams, Params } from '../types'
 import mapStream from '../utils/map-stream'
 import convertToBase64 from '../utils/convert-to-base64'
 
-interface OpenAIResponse {
+interface OpenAITextResponse {
   id: string
   object: string
   created: number
@@ -45,7 +46,7 @@ const OPENAI_BASE_URL = 'https://api.openai.com/v1'
   },
 ] */
 
-export async function openAI(model: string, params: DistilledParams, debugCallback?: (body: object) => void) {
+async function text(model: string, params: DistilledParams, debugCallback?: (body: object) => void) {
   const messages = await Promise.all(
     params.messages.map(async ({ role, content }) => ({
       role,
@@ -79,7 +80,7 @@ export async function openAI(model: string, params: DistilledParams, debugCallba
   }
   if (debugCallback) debugCallback(body)
 
-  const res = $fetch<OpenAIResponse | ReadableStream<Uint8Array>>('/chat/completions', {
+  const res = $fetch<OpenAITextResponse | ReadableStream<Uint8Array>>('/chat/completions', {
     baseURL: OPENAI_BASE_URL,
     headers: {
       Authorization: `Bearer ${env.OPENAI_API_KEY}`,
@@ -99,7 +100,7 @@ export async function openAI(model: string, params: DistilledParams, debugCallba
         let delta: string
         let total: string
 
-        return mapStream<{ delta: string; total: string }>(res, (data: OpenAIResponse) => {
+        return mapStream<{ delta: string; total: string }>(res, (data: OpenAITextResponse) => {
           // consola.log({ choices: data.choices.at(-1) })
           const value = data.choices.at(-1)!.delta?.content ?? ''
           // consola.log({ value })
@@ -115,3 +116,40 @@ export async function openAI(model: string, params: DistilledParams, debugCallba
     }),
   }
 }
+
+interface OpenAIAudioResponse {
+  text: string
+}
+
+async function audio(model: string, params: DistilledParams, debugCallback?: (body: object) => void) {
+  const buffer = Buffer.from(params.messages.at(-1)!.content.audios.at(-1)!)
+  const fileType = await fileTypeFromBuffer(buffer)
+  const blob = new Blob([buffer], { type: fileType?.mime })
+
+  const body = new FormData()
+  body.append('file', blob)
+  body.append('model', model)
+
+  if (debugCallback) debugCallback(body)
+
+  const res = $fetch<OpenAIAudioResponse>('/audio/transcriptions', {
+    baseURL: OPENAI_BASE_URL,
+    headers: {
+      Authorization: `Bearer ${env.OPENAI_API_KEY}`,
+    },
+    method: 'POST',
+    body,
+    onResponseError({ response, error }) {
+      throw new Error(`OpenAI Fetch Failed ${response.status} ${response.statusText}`)
+    },
+  })
+
+  return {
+    content: await res.then((res) => {
+      // consola.log({ input: params.messages, output: res.choices[0].message.content })
+      return res.text
+    }),
+  }
+}
+
+export { text, audio }

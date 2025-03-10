@@ -4,7 +4,7 @@ import { initAI } from '../src'
 const ai = initAI()
 
 const result = await ai.run(
-  'text-generation',
+  'text-generate',
   '@Google/gemini-1.5-pro',
   {
     messages: [

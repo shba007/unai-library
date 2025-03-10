@@ -3,15 +3,16 @@ import { initAI } from '../src'
 
 const ai = initAI()
 
-const filePath = 'test.mp3'
-const buffer = fs.readFileSync(filePath)
+const filePath = './examples/prompt1.wav'
+const audioBuffer = fs.readFileSync(filePath)
 
-const result = await ai.run('audio-transcription', '@Google/gemini-1.5-flash-8b', {
+const result = await ai.run('audio-transcribe', '@OpenAI/whisper-v2', {
   messages: [
     {
       role: 'user',
       content: {
-        audios: ['file://test.mp3', buffer],
+        // audios: ['file://test.mp3],
+        audios: [audioBuffer],
       },
     },
   ],

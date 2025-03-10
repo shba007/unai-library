@@ -49,7 +49,7 @@ export type Params = PromptParams | MessageParams
 
 export interface DistilledDetailedMessage {
   role: Role
-  content: { audios: string[]; text: string; images: string[] }
+  content: { audios: Buffer<ArrayBufferLike>[]; text: string; images: string[] }
 }
 
 export interface DistilledParams {
