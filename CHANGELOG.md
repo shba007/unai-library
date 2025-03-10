@@ -1,5 +1,11 @@
 # unai
 
+## 0.3.1
+
+### Patch Changes
+
+- 6a2bab9: docs: update project name to unai-library in README
+
 ## 0.3.0
 
 ### Minor Changes
