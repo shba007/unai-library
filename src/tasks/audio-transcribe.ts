@@ -1,11 +1,11 @@
 import { openAI } from '../models'
-import { Params } from '../types'
+import { DistilledParams, Params } from '../types'
 
 type AudioTranscribeOpenAIModel = '@OpenAI/whisper-v2'
 
 export type AudioTranscribeModel = AudioTranscribeOpenAIModel
 
-export async function audioTranscribe<T = string>(model: AudioTranscribeModel, params: Params, debugCallback?: (body: object) => void) {
+export async function audioTranscribe(model: AudioTranscribeModel, params: Params, debugCallback?: (body: object) => void) {
   let result: Promise<{ content: string }> | undefined = undefined
   switch (model) {
     case '@OpenAI/whisper-v2': {
@@ -14,7 +14,7 @@ export async function audioTranscribe<T = string>(model: AudioTranscribeModel, p
         'whisper-v2': 'whisper-1',
       } as const
 
-      result = openAI.audio(modelMap[modelName as 'whisper-v2'], params, debugCallback)
+      result = openAI.audio(modelMap[modelName as 'whisper-v2'], params as DistilledParams, debugCallback)
       break
     }
     default: {
