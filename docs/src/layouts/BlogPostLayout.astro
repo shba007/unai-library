@@ -1,0 +1,91 @@
+---
+import type { CollectionEntry } from 'astro:content'
+import FormattedDate from '../components/FormattedDate.astro'
+import BaseHead from '../components/BaseHead.astro'
+import AppHeader from '../components/AppHeader.astro'
+import AppFooter from '../components/AppFooter.astro'
+import { pwaInfo } from 'virtual:pwa-info'
+
+type Props = CollectionEntry<'blog'>['data']
+
+const { title, description, pubDate, updatedDate, heroImage } = Astro.props
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={title} description={description} />
+    <link rel="apple-touch-icon" href="/pwa-192x192.png" />
+    <meta name="msapplication-TileColor" content="#0EA5E9" />
+    <meta name="theme-color" content="#0EA5E9" />
+    {pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} />}
+    <style is:global>
+      .content h1 {
+        @apply my-4 text-2xl font-semi-bold;
+      }
+      .content h2 {
+        @apply my-3 text-xl font-semi-bold underline decoration-dashed underline-offset-8;
+      }
+      .content h3 {
+        @apply my-2 text-lg font-semi-bold;
+      }
+      .content h4 {
+        @apply my-1 text-lg font-semi-bold;
+      }
+      .content p {
+        @apply my-2 font-light opacity-80 md:my-4 md:text-[1.125rem];
+      }
+      .content > img {
+        @apply mx-auto my-4 aspect-video max-h-[18rem] w-full rounded-md object-cover md:my-8;
+      }
+      .content aside {
+        @apply my-2 flex items-start gap-1 rounded bg-dark-600/20 p-4;
+      }
+      .content aside > img {
+        @apply w-7;
+      }
+      .content aside > p {
+        @apply my-0;
+      }
+      .content strong {
+        @apply font-bold;
+      }
+      .content ol {
+        @apply ml-8 list-decimal;
+      }
+      .content ul {
+        @apply ml-8 list-disc;
+      }
+      .content a {
+        @apply underline underline-offset-1;
+      }
+      .content blockquote {
+        @apply rounded border-l-4 border-primary-500 pl-4;
+      }
+    </style>
+  </head>
+  <body>
+    <AppHeader />
+    <main class="shrink flex flex-col items-stretch mx-auto mt-20 mb-3 px-4 max-w-[76rem] min-h-screen">
+      <article class="w-full">
+        <img src={heroImage} class="absolute left-0 w-screen aspect-[5/3] max-h-[20rem] object-cover" />
+        <div class="invisible aspect-[5/3] max-h-[20rem]"></div>
+        <!-- <h1 class="md:text-xl mt-4 md:max-w-[80%]">{title}</h1> -->
+        <div class="content mx-auto max-w-4xl leading-relaxed">
+          <div class="flex justify-between gap-8 mt-10 md:mt-8 mb-2 text-white/60">
+            <FormattedDate date={pubDate} />
+            {
+              updatedDate && (
+                <span class="text-base text-right">
+                  Updated on <FormattedDate date={updatedDate} />
+                </span>
+              )
+            }
+          </div>
+          <slot />
+        </div>
+      </article>
+    </main>
+    <AppFooter />
+  </body>
+</html>

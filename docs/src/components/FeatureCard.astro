@@ -1,0 +1,38 @@
+---
+const { title, describtion, ...props } = Astro.props;
+---
+
+<div class="card relative flex flex-col gap-2 rounded-2xl p-4 md:p-7 w-full lg:max-w-[24rem] min-h-[21.375rem] bg-dark-500 hover:bg-dark-400 transition-colors">
+	<div class="absolute top-0 left-0 w-full h-full">
+		<div class="gradient-border gradient-border-dark rounded-2xl overflow-clip"></div>
+	</div>
+	<div class="grow w-full"></div>
+	<h6 class="md:text-lg">{title}</h6>
+	<p class="text-sm md:text-base opacity-50">{describtion}</p>
+</div>
+
+<style scoped>
+	@property --gradient-angle {
+		syntax: '<angle>';
+		initial-value: 0deg;
+		inherits: false;
+	}
+
+	.gradient-border {
+		background-size: 600% 600%;
+		height: calc(100% + 4px);
+		width: calc(100% + 4px);
+		transform: translate(-2px, -2px);
+		@apply absolute top-0 left-0 opacity-0 -z-10;
+	}
+
+	.card:hover .gradient-border {
+		@apply transition-all duration-300 ease-linear opacity-100 animate-gradient-rotate;
+	}
+
+	.gradient-border-dark {
+		/* 6860fa */
+		background: linear-gradient(1turn, hsla(213, 93%, 60%, 0.1), hsla(213, 93%, 60%, 0.6), hsla(213, 93%, 60%, 1), hsla(213, 93%, 60%, 0.4));
+		background: linear-gradient(var(--gradient-angle), hsla(213, 93%, 60%, 0.1), hsla(213, 93%, 60%, 0.6), hsla(213, 93%, 60%, 1), hsla(213, 93%, 60%, 0.4));
+	}
+</style>

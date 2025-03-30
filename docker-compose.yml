@@ -1,0 +1,357 @@
+name: 'unai-dev'
+services:
+  web:
+    # image: 'ghcr.io/shba007/unai-web:latest'
+    build: ./docs
+    restart: on-failure:3
+    env_file:
+      - ./docs/.env.prod
+    ports:
+      - 3200:8000
+
+  api:
+    # image: 'ghcr.io/shba007/unai-api:latest'
+    build: ../unai-api
+    restart: on-failure:3
+    env_file:
+      - ../unai-api/.env.prod
+    ports:
+      - 2300:8000
+
+  scout:
+    # image: 'ghcr.io/shba007/unai-api:latest'
+    build: ../unai-scout
+    restart: on-failure:3
+    env_file:
+      - ../unai-scout/.env.prod
+    ports:
+      - 2310:4200
+
+  prefect-server:
+    image: prefecthq/prefect:3.2-python3.12
+    restart: on-failure:3
+    ports:
+      - '1410:4200'
+    environment:
+      PREFECT_API_URL: 'http://localhost:1410/api'
+      PREFECT_SERVER_API_HOST: '0.0.0.0'
+      PREFECT_API_DATABASE_CONNECTION_URL: 'postgresql+asyncpg://postgres:postgres@postgres:5432/main'
+      PREFECT_API_DATABASE_MIGRATE_ON_START: True
+    command: ['prefect', 'server', 'start']
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    restart: on-failure:3
+    ports:
+      - 1101:8080
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:9090
+    volumes:
+      - open-webui:/app/backend/data
+
+  ollama:
+    image: ollama/ollama:0.5.13-rocm
+    restart: on-failure:3
+    ports:
+      - 1100:11434
+    volumes:
+      - ../unai-models/models/ollama:/root/.ollama
+
+  invokeai:
+    image: ghcr.io/invoke-ai/invokeai
+    restart: on-failure:3
+    ports:
+      - 1110:9090
+    # runtime: nvidia
+    # deploy:
+    #     resources:
+    #         reservations:
+    #             devices:
+    #                 - driver: nvidia
+    #                   count: all
+    #                   capabilities:
+    #                       - gpu
+    volumes:
+      - ../unai-models/models/invokeai:/app/invokeai
+
+  imagebind:
+    image: r8.im/daanelson/imagebind
+    restart: on-failure:3
+    ports:
+      - 1200:5000
+    # runtime: nvidia
+    # deploy:
+    #     resources:
+    #         reservations:
+    #             devices:
+    #                 - driver: nvidia
+    #                   count: all
+    #                   capabilities:
+    #                       - gpu
+
+  grounding-dino:
+    image: r8.im/adirik/grounding-dino
+    restart: on-failure:3
+    ports:
+      - 1201:5000
+    # runtime: nvidia
+    # deploy:
+    #     resources:
+    #         reservations:
+    #             devices:
+    #                 - driver: nvidia
+    #                   count: all
+    #                   capabilities:
+    #                       - gpu
+
+  deepseek-ai-deepseek-vl2-small:
+    image: registry.hf.space/deepseek-ai-deepseek-vl2-small:latest
+    stdin_open: true
+    tty: true
+    ports:
+      - 1206:7860
+    platform: linux/amd64
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities:
+    #             - gpu
+    command: python app.py
+  yonigozlan-got-ocr-transformers:
+    image: registry.hf.space/yonigozlan-got-ocr-transformers:latest
+    stdin_open: true
+    tty: true
+    ports:
+      - 1217:7860
+    platform: linux/amd64
+    # deploy:
+    #     resources:
+    #         reservations:
+    #             devices:
+    #                 - driver: nvidia
+    #                   count: all
+    #                   capabilities:
+    #                       - gpu
+    command: python app.py
+
+  atlury-jiovirtualtryon:
+    image: registry.hf.space/atlury-jiovirtualtryon:latest
+    stdin_open: true
+    tty: true
+    ports:
+      - 1211:7860
+    platform: linux/amd64
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities:
+    #             - gpu
+    command: python app.py
+
+  ahkamboh-change-cloth-ai:
+    image: registry.hf.space/ahkamboh-change-cloth-ai:latest
+    platform: linux/amd64
+    stdin_open: true
+    tty: true
+    ports:
+      - 1212:7860
+    environment:
+      - HUGGING_FACE_HUB_TOKEN=YOUR_VALUE_HERE
+    command: python app.py
+
+  usmanyousaf-virtual-dressup:
+    image: registry.hf.space/usmanyousaf-virtual-dressup:latest
+    platform: linux/amd64
+    stdin_open: true
+    tty: true
+    ports:
+      - 1213:7860
+    command: streamlit run app.py
+
+  mrfreak72-dressifyfullbody:
+    image: registry.hf.space/mrfreak72-dressifyfullbody:latest
+    platform: linux/amd64
+    ports:
+      - 1214:7860
+    stdin_open: true
+    tty: true
+    command: python app.py
+
+  louu007-issatm-vto:
+    image: registry.hf.space/louu007-issatm-vto:latest
+    platform: linux/amd64
+    stdin_open: true
+    tty: true
+    ports:
+      - 1215:7860
+    command: python app.py
+
+  rlawjdghek-stableviton:
+    image: registry.hf.space/rlawjdghek-stableviton:latest
+    platform: linux/amd64
+    stdin_open: true
+    tty: true
+    ports:
+      - 1216:7860
+    # deploy:
+    #     resources:
+    #         reservations:
+    #             devices:
+    #                 - driver: nvidia
+    #                   count: all
+    #                   capabilities:
+    #                       - gpu
+    command: python app.py
+
+  pramallc-ben2:
+    image: registry.hf.space/pramallc-ben2:latest
+    stdin_open: true
+    tty: true
+    ports:
+      - 1218:7860
+    platform: linux/amd64
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities:
+    #             - gpu
+    command: python app.py
+
+  sonitranslate:
+    image: registry.hf.space/r3gm-sonitranslate-translate-audio-of-a-video-content:latest
+    stdin_open: true
+    tty: true
+    ports:
+      - 1219:7860
+    platform: linux/amd64
+    # deploy:
+    #     resources:
+    #         reservations:
+    #             devices:
+    #                 - driver: nvidia
+    #                   count: all
+    #                   capabilities:
+    #                       - gpu
+    environment:
+      - OPENAI_API_KEY=YOUR_VALUE_HERE
+      - YOUR_HF_TOKEN=YOUR_VALUE_HERE
+      - ZERO_GPU=TRUE
+      - IS_DEMO=TRUE
+    command: python app_rvc.py
+
+  steveeeeeeen-zonos:
+    image: registry.hf.space/steveeeeeeen-zonos:latest
+    stdin_open: true
+    tty: true
+    ports:
+      - 1205:7860
+    platform: linux/amd64
+    # deploy:
+    #     resources:
+    #         reservations:
+    #             devices:
+    #                 - driver: nvidia
+    #                   count: all
+    #                   capabilities:
+    #                       - gpu
+    command: python app.py
+
+  kokoro:
+    image: r8.im/jaaari/kokoro-82m
+    restart: on-failure:3
+    ports:
+      - 1202:5000
+    # runtime: nvidia
+    # deploy:
+    #     resources:
+    #         reservations:
+    #             devices:
+    #                 - driver: nvidia
+    #                   count: all
+    #                   capabilities:
+    #                       - gpu
+
+  seamless-communication:
+    image: r8.im/cjwbw/seamless_communication
+    restart: on-failure:3
+    ports:
+      - 1203:5000
+    # runtime: nvidia
+    # deploy:
+    #     resources:
+    #         reservations:
+    #             devices:
+    #                 - driver: nvidia
+    #                   count: all
+    #                   capabilities:
+    #                       - gpu
+
+  realistic-voice-cloning:
+    image: r8.im/zsxkib/realistic-voice-cloning
+    restart: on-failure:3
+    ports:
+      - 1204:5000
+    # runtime: nvidia
+    # deploy:
+    #     resources:
+    #         reservations:
+    #             devices:
+    #                 - driver: nvidia
+    #                   count: all
+    #                   capabilities:
+    #                       - gpu
+
+  tf-serve:
+    image: 'tensorflow/serving:2.18.0'
+    restart: on-failure:3
+    ports:
+      - 1310:8500
+      - 1311:8501
+    volumes:
+      - type: bind
+        source: ../unai-models/dist/models
+        target: /models
+    command: '--model_config_file=/models/models.config'
+
+  torchserve:
+    image: pytorch/torchserve:0.12.0-cpu
+    restart: on-failure:3
+    ports:
+      - 1320:8080
+      - 1321:8081
+      - 1322:8082
+      - 1323:7070
+      - 1324:7071
+    volumes:
+      - type: bind
+        source: ../unai-models/dist/models
+        target: /home/model-server/model-store
+    command: torchserve --model-store /home/model-server/model-store --models my_model=TranslationClassifier.mar
+
+  postgres:
+    image: postgres:17-alpine
+    command: '-d 1'
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=main
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  db-data:
+  open-webui:

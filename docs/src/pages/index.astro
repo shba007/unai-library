@@ -1,0 +1,14 @@
+---
+import SectionFeature from '../components/SectionFeature.astro'
+import SectionHero from '../components/SectionHero.astro'
+import SectionStarting from '../components/SectionStarting.astro'
+import DefaultLayout from '../layouts/DefaultLayout.astro'
+---
+
+<DefaultLayout>
+  <main class="flex flex-col gap-8 items-stretch mx-auto p-4 max-w-[76rem]">
+    <SectionHero />
+    <SectionFeature />
+    <SectionStarting />
+  </main>
+</DefaultLayout>
