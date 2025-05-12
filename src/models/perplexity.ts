@@ -37,6 +37,7 @@ export async function perplexity(model: string, params: DistilledParams, debugCa
     messages: params.messages.map(({ role, content }) => ({ role, content: content.text })),
   }
   if (debugCallback) debugCallback(body)
+  let status: { code: number; message: string }
 
   const res = $fetch<PerplexityResponse | ReadableStream<Uint8Array>>('/chat/completions', {
     baseURL: PERPLEXITY_BASE_URL,
@@ -48,29 +49,33 @@ export async function perplexity(model: string, params: DistilledParams, debugCa
     // @ts-ignore
     responseType: params.stream ? 'stream' : undefined,
     onResponseError({ response }) {
-      throw new Error(`Perplexity Fetch Failed ${response.status} ${response.statusText}`)
+      status = { code: response.status, message: response.statusText }
     },
   })
 
   return {
-    content: await res.then((res) => {
-      if (res instanceof ReadableStream) {
-        let delta: string
-        let total: string
+    content: await res
+      .then((res) => {
+        if (res instanceof ReadableStream) {
+          let delta: string
+          let total: string
 
-        return mapStream<{ delta: string; total: string }>(res, (data: PerplexityResponse) => {
-          // consola.log({ choices: data.choices.at(-1) })
-          const value = data.choices.at(-1)!.delta?.content ?? ''
-          // consola.log({ value })
-          delta = value
-          total = (total ?? '') + value
+          return mapStream<{ delta: string; total: string }>(res, (data: PerplexityResponse) => {
+            // consola.log({ choices: data.choices.at(-1) })
+            const value = data.choices.at(-1)!.delta?.content ?? ''
+            // consola.log({ value })
+            delta = value
+            total = (total ?? '') + value
 
-          return { delta, total }
-        })
-      } else {
-        // consola.log({ input: params.messages, output: res.choices[0].message.content })
-        return res.choices.at(-1)!.message.content
-      }
-    }),
+            return { delta, total }
+          })
+        } else {
+          // consola.log({ input: params.messages, output: res.choices[0].message.content })
+          return res.choices.at(-1)!.message.content
+        }
+      })
+      .catch((error) => {
+        throw new Error(`Perplexity Fetch Failed ${status.code} ${status.message} - ${JSON.stringify(error.data, undefined, 2)}`)
+      }),
   }
 }

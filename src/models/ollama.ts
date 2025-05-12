@@ -32,6 +32,7 @@ export async function ollama(model: string, params: DistilledParams, debugCallba
     messages: params.messages,
   }
   if (debugCallback) debugCallback(body)
+  let status: { code: number; message: string }
 
   const res = $fetch<OllamaResponse | ReadableStream<Uint8Array>>('/api/chat', {
     baseURL: env.OLLAMA_BASE_URL ?? 'http://localhost:11434',
@@ -39,25 +40,32 @@ export async function ollama(model: string, params: DistilledParams, debugCallba
     body,
     // @ts-ignore
     responseType: params.stream ? 'stream' : undefined,
+    onResponseError({ response }) {
+      status = { code: response.status, message: response.statusText }
+    },
   })
 
   return {
-    content: await res.then((res) => {
-      if (res instanceof ReadableStream) {
-        let delta: string
-        let total: string
+    content: await res
+      .then((res) => {
+        if (res instanceof ReadableStream) {
+          let delta: string
+          let total: string
 
-        return mapStream<{ delta: string; total: string }>(res, (data: OllamaResponse) => {
-          const value = data.message.content
-          delta = value
-          total = (total ?? '') + value
+          return mapStream<{ delta: string; total: string }>(res, (data: OllamaResponse) => {
+            const value = data.message.content
+            delta = value
+            total = (total ?? '') + value
 
-          return { delta, total }
-        })
-      } else {
-        // consola.log({ input: params.messages, output: res.message })
-        return res.message.content
-      }
-    }),
+            return { delta, total }
+          })
+        } else {
+          // consola.log({ input: params.messages, output: res.message })
+          return res.message.content
+        }
+      })
+      .catch((error) => {
+        throw new Error(`Ollama Fetch Failed ${status.code} ${status.message} - ${JSON.stringify(error.data, undefined, 2)}`)
+      }),
   }
 }

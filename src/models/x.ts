@@ -70,10 +70,7 @@ async function text(model: string, params: DistilledParams, debugCallback?: (bod
     messages,
   }
   if (debugCallback) debugCallback(body)
-
-  console.log({
-    Authorization: `Bearer ${env.X_API_KEY}`,
-  })
+  let status: { code: number; message: string }
 
   const res = $fetch<XTextResponse | ReadableStream<Uint8Array>>('/chat/completions', {
     baseURL: X_BASE_URL,
@@ -83,34 +80,36 @@ async function text(model: string, params: DistilledParams, debugCallback?: (bod
     method: 'POST',
     body,
     // @ts-ignore
-    // responseType: params.stream ? 'stream' : undefined,
-    async onResponseError({ response, error }) {
-      // const textContent = await readStreamAsText(response.body);
-      const textContent = ''
-      throw new Error(`X Fetch Failed ${response.status} ${response.statusText} \n\n ${textContent}`)
+    responseType: params.stream ? 'stream' : undefined,
+    onResponseError({ response }) {
+      status = { code: response.status, message: response.statusText }
     },
   })
 
   return {
-    content: await res.then((res) => {
-      if (res instanceof ReadableStream) {
-        let delta: string
-        let total: string
+    content: await res
+      .then((res) => {
+        if (res instanceof ReadableStream) {
+          let delta: string
+          let total: string
 
-        return mapStream<{ delta: string; total: string }>(res, (data: XTextResponse) => {
-          // consola.log({ choices: data.choices.at(-1) })
-          const value = data.choices.at(-1)!.delta?.content ?? ''
-          // consola.log({ value })
-          delta = value
-          total = (total ?? '') + value
+          return mapStream<{ delta: string; total: string }>(res, (data: XTextResponse) => {
+            // consola.log({ choices: data.choices.at(-1) })
+            const value = data.choices.at(-1)!.delta?.content ?? ''
+            // consola.log({ value })
+            delta = value
+            total = (total ?? '') + value
 
-          return { delta, total }
-        })
-      } else {
-        // consola.log({ input: params.messages, output: res.choices[0].message.content })
-        return res.choices.at(-1)!.message.content
-      }
-    }),
+            return { delta, total }
+          })
+        } else {
+          // consola.log({ input: params.messages, output: res.choices[0].message.content })
+          return res.choices.at(-1)!.message.content
+        }
+      })
+      .catch((error) => {
+        throw new Error(`X Fetch Failed ${status.code} ${status.message} - ${JSON.stringify(error.data, undefined, 2)}`)
+      }),
   }
 }
 
