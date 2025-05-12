@@ -2,6 +2,18 @@
 
 # unai-package
 
+## v0.3.3
+
+[compare changes](https://github.com/shba007/unai-library/compare/v0.3.2...v0.3.3)
+
+### 🏡 Chore
+
+- Remove unused scripts and devDependencies from package.json ([f28a65e](https://github.com/shba007/unai-library/commit/f28a65e))
+
+### ❤️ Contributors
+
+- Shba007 ([@shba007](https://github.com/shba007))
+
 ## v0.3.2
 
 [compare changes](https://github.com/shba007/unai-library/compare/v0.3.1...v0.3.2)
