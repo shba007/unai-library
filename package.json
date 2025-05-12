@@ -41,7 +41,7 @@
     "format": "prettier . --write",
     "test:types": "tsc --noEmit --skipLibCheck",
     "test": "bun run lint && dotenvx run -- vitest run --coverage",
-    "play": "dotenvx run -- jiti examples/output-function-call",
+    "play": "dotenvx run -- jiti examples/input-text",
     "build": "unbuild",
     "prepack": "bun run build",
     "release": "bun run test && changelogen --release && bun run publish && git push --follow-tags",

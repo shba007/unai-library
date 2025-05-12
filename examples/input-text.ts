@@ -5,7 +5,7 @@ const ai = initAI()
 
 const result = await ai.run(
   'text-generate',
-  '@X/grok-2:1212',
+  '@Google/gemini-2.0-flash-lite',
   {
     messages: [
       {

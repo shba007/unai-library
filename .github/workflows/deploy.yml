@@ -18,6 +18,7 @@ concurrency:
 
 env:
   REPO: ${{ github.repository }}
+  USERNAME: ${{ github.repository_owner }}
 
 jobs:
   publish:
@@ -41,16 +42,12 @@ jobs:
 
       - name: 🔀 Publish to NPM
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
-          echo "registry=https://registry.npmjs.org/" >> ~/.npmrc
           bun publish --no-git-checks --access public
 
       - name: 🔀 Publish to GitHub
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_CONFIG_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
-          echo "registry=https://npm.pkg.github.com/${{ github.repository_owner }}" >> ~/.npmrc
-          bun publish --no-git-checks --access public --registry https://npm.pkg.github.com
+          bun publish --no-git-checks --access public --registry https://npm.pkg.github.com/${{ env.USERNAME }}

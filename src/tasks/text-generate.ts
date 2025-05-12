@@ -10,7 +10,15 @@ type TextGenerateOllamaModel =
   | '@Ollama/Meta/llama3.2-vision:90b'
   | '@Ollama/Meta/llama3.3'
   | '@Ollama/Meta/artifish/llama3.2-uncensored:latest'
-type TextGenerateGoogleModel = '@Google/gemini-1.0-pro' | '@Google/gemini-1.5-flash-8b' | '@Google/gemini-1.5-flash' | '@Google/gemini-1.5-pro'
+type TextGenerateGoogleModel =
+  | '@Google/gemini-1.5-flash-8b'
+  | '@Google/gemini-1.5-flash'
+  | '@Google/gemini-1.5-pro'
+  | '@Google/gemini-2.0-flash-lite'
+  | '@Google/gemini-2.0-flash'
+  | '@Google/gemini-2.5-flash-preview-04-17'
+  | '@Google/gemini-2.5-pro-exp-03-25'
+  | '@Google/gemini-2.5-pro-preview-05-06'
 type TextGenerateOpenAIModel =
   | '@OpenAI/gpt-3.5-turbo:instruct'
   | '@OpenAI/gpt-3.5-turbo:1106'
@@ -24,6 +32,8 @@ type TextGenerateOpenAIModel =
   | '@OpenAI/gpt-4-turbo:preview'
   | '@OpenAI/gpt-4-turbo:2024-04-09'
   | '@OpenAI/gpt-4-turbo:latest'
+  | '@OpenAI/gpt-4:latest'
+  | '@OpenAI/gpt-4.1:latest'
   | '@OpenAI/gpt-4o-mini:2024-07-18'
   | '@OpenAI/gpt-4o-mini:latest'
   | '@OpenAI/gpt-4o:2024-05-13'
@@ -38,6 +48,8 @@ type TextGenerateOpenAIModel =
   | '@OpenAI/o1:latest'
   | '@OpenAI/o3-mini:2025-01-31'
   | '@OpenAI/o3-mini:latest'
+  | '@OpenAI/o3:latest'
+  | '@OpenAI/o4-mini:latest'
 type TextGeneratePerplexityModel =
   | '@Perplexity/llama-3.1-sonar-small-128k-online'
   | '@Perplexity/llama-3.1-sonar-large-128k-online'
@@ -105,10 +117,14 @@ export async function textGenerate<T = string>(model: TextGenerateModel, params:
       result = ollama.ollama(model.split('/').slice(2).join('/'), distilledParams, debugCallback)
       break
     }
-    case '@Google/gemini-1.0-pro':
     case '@Google/gemini-1.5-flash-8b':
     case '@Google/gemini-1.5-flash':
-    case '@Google/gemini-1.5-pro': {
+    case '@Google/gemini-1.5-pro':
+    case '@Google/gemini-2.0-flash-lite':
+    case '@Google/gemini-2.0-flash':
+    case '@Google/gemini-2.5-flash-preview-04-17':
+    case '@Google/gemini-2.5-pro-exp-03-25':
+    case '@Google/gemini-2.5-pro-preview-05-06': {
       distilledParams.format = formatJSONSchema('Google', distilledParams.format)
       result = google.google(model.split('/').slice(-1).join('/'), distilledParams, debugCallback)
       break
