@@ -1,0 +1,56 @@
+name: NPM CD
+run-name: ${{ github.ref_name }}
+
+# permissions:
+#   contents: write
+#   packages: write
+#   attestations: write
+#   id-token: write
+
+on:
+  release:
+    types:
+      - published
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  REPO: ${{ github.repository }}
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🛠️ Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: 📦 Install Dependencies
+        run: bun install --frozen-lockfile
+
+      - name: ⚙️ Build Artifacts
+        run: bun run build
+
+      - name: 🔀 Publish to NPM
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
+          echo "registry=https://registry.npmjs.org/" >> ~/.npmrc
+          pnpm publish --no-git-checks --access public
+
+      - name: 🔀 Publish to GitHub
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
+          echo "registry=https://npm.pkg.github.com/${{ github.repository_owner }}" >> ~/.npmrc
+          pnpm publish --no-git-checks --access public --registry https://npm.pkg.github.com

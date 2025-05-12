@@ -45,7 +45,7 @@ export async function toolUse<T = string>(model: ToolUseModel, params: ToolParam
 
   const distilledParams: DistilledToolParams = {
     stream: params.stream ?? false,
-    messages: params.messages as DistilledToolMessage[],
+    messages: params.messages as unknown as DistilledToolMessage[],
     format: params.format ? zodToJsonSchema(params.format as Zod.AnyZodObject) : undefined,
     tools: params.tools ?? [],
   }

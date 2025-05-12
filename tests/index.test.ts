@@ -194,22 +194,18 @@ describe('Text Generate', () => {
     // Run the AI text generation with a set of messages.
     const result = await ai.run('text-generate', '@Groq/llama3-70b-8192', {
       messages: [
-        // {
-        //   role: 'system',
-        //   content: 'reply in one word',
-        // },
         {
           role: 'user',
           content: 'What is the tree color',
         },
-        // {
-        //   role: 'assistant',
-        //   content: 'Green',
-        // },
-        // {
-        //   role: 'user',
-        //   content: 'What is the sky color',
-        // },
+        {
+          role: 'assistant',
+          content: 'Green',
+        },
+        {
+          role: 'user',
+          content: 'What is the sky color',
+        },
       ],
     })
 
