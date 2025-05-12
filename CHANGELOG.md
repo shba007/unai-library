@@ -2,6 +2,28 @@
 
 # unai-package
 
+## v0.3.2
+
+[compare changes](https://github.com/shba007/unai-library/compare/v0.3.1...v0.3.2)
+
+### 🚀 Enhancements
+
+- Add tool-use functionality and update package dependencies ([3c3da63](https://github.com/shba007/unai-library/commit/3c3da63))
+
+### 💅 Refactors
+
+- Unai-web merged into unai-library making it a mono repo ([b27e7ad](https://github.com/shba007/unai-library/commit/b27e7ad))
+- Clean up code and improve readability in OpenAI model handling ([02de0f4](https://github.com/shba007/unai-library/commit/02de0f4))
+
+### 🏡 Chore
+
+- Removed blog-related content and layouts, including articles, icons, and styles ([e72ac70](https://github.com/shba007/unai-library/commit/e72ac70))
+
+### ❤️ Contributors
+
+- Shba007 ([@shba007](https://github.com/shba007))
+- Shirsendu Bairagi ([@shba007](https://github.com/shba007))
+
 ## 0.3.1
 
 ### Patch Changes
