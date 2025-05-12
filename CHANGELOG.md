@@ -2,6 +2,18 @@
 
 # unai-package
 
+## v0.3.4
+
+[compare changes](https://github.com/shba007/unai-library/compare/v0.3.3...v0.3.4)
+
+### 🏡 Chore
+
+- Update NPM publish configuration and improve Google model support ([81dcc2e](https://github.com/shba007/unai-library/commit/81dcc2e))
+
+### ❤️ Contributors
+
+- Shba007 ([@shba007](https://github.com/shba007))
+
 ## v0.3.3
 
 [compare changes](https://github.com/shba007/unai-library/compare/v0.3.2...v0.3.3)
