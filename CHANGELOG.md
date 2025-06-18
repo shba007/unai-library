@@ -1,14 +1,14 @@
 # Changelog
 
-# unai-package
+# unai
 
 ## v0.3.4
 
-[compare changes](https://github.com/shba007/unai-library/compare/v0.3.3...v0.3.4)
+[compare changes](https://github.com/shba007/unai/compare/v0.3.3...v0.3.4)
 
 ### 🏡 Chore
 
-- Update NPM publish configuration and improve Google model support ([81dcc2e](https://github.com/shba007/unai-library/commit/81dcc2e))
+- Update NPM publish configuration and improve Google model support ([81dcc2e](https://github.com/shba007/unai/commit/81dcc2e))
 
 ### ❤️ Contributors
 
@@ -16,11 +16,11 @@
 
 ## v0.3.3
 
-[compare changes](https://github.com/shba007/unai-library/compare/v0.3.2...v0.3.3)
+[compare changes](https://github.com/shba007/unai/compare/v0.3.2...v0.3.3)
 
 ### 🏡 Chore
 
-- Remove unused scripts and devDependencies from package.json ([f28a65e](https://github.com/shba007/unai-library/commit/f28a65e))
+- Remove unused scripts and devDependencies from package.json ([f28a65e](https://github.com/shba007/unai/commit/f28a65e))
 
 ### ❤️ Contributors
 
@@ -28,20 +28,20 @@
 
 ## v0.3.2
 
-[compare changes](https://github.com/shba007/unai-library/compare/v0.3.1...v0.3.2)
+[compare changes](https://github.com/shba007/unai/compare/v0.3.1...v0.3.2)
 
 ### 🚀 Enhancements
 
-- Add tool-use functionality and update package dependencies ([3c3da63](https://github.com/shba007/unai-library/commit/3c3da63))
+- Add tool-use functionality and update package dependencies ([3c3da63](https://github.com/shba007/unai/commit/3c3da63))
 
 ### 💅 Refactors
 
-- Unai-web merged into unai-library making it a mono repo ([b27e7ad](https://github.com/shba007/unai-library/commit/b27e7ad))
-- Clean up code and improve readability in OpenAI model handling ([02de0f4](https://github.com/shba007/unai-library/commit/02de0f4))
+- Unai-web merged into unai making it a mono repo ([b27e7ad](https://github.com/shba007/unai/commit/b27e7ad))
+- Clean up code and improve readability in OpenAI model handling ([02de0f4](https://github.com/shba007/unai/commit/02de0f4))
 
 ### 🏡 Chore
 
-- Removed blog-related content and layouts, including articles, icons, and styles ([e72ac70](https://github.com/shba007/unai-library/commit/e72ac70))
+- Removed blog-related content and layouts, including articles, icons, and styles ([e72ac70](https://github.com/shba007/unai/commit/e72ac70))
 
 ### ❤️ Contributors
 
@@ -52,7 +52,7 @@
 
 ### Patch Changes
 
-- 6a2bab9: docs: update project name to unai-library in README
+- 6a2bab9: docs: update project name to unai in README
 
 ## 0.3.0
 
@@ -133,32 +133,3 @@
 - 23b051e: ci: add CI and CD workflows
 
   Adds CI and CD workflows to automate the build, test, and release process. The CI workflow runs on every push to the 'develop' branch and includes linting. The CD workflow runs on every tag push and publishes the package to NPM. This change improves the development workflow and ensures code quality.
-
-## unai-docs
-
-### 0.1.2
-
-#### Patch Changes
-
-- cde273b: chore: update project settings and dependencies
-- 2aa7739: chore: add docker configuration files and scripts
-  - chore: add gitleaks pre-commit hook and configuration files
-  - chore: add commitlint configuration and husky setup
-  - chore: update eslint configuration and add astro plugin
-
-### 0.1.1
-
-#### Patch Changes
-
-- b9a50f2: docs: readme updated
-
-### 0.1.0
-
-#### Minor Changes
-
-- 8b5bdb6: first release
-- b58efd1: feat: ci/cd pipeline added
-  - Adds CI and CD workflows to automate the build, test, and release process
-  - The CI workflow runs on every push to the 'develop' branch (with linting)
-  - The CD workflow runs on every tag push and publishes the package to NPM
-  - This improves development workflow and ensures code quality

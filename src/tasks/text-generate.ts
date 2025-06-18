@@ -32,7 +32,6 @@ type TextGenerateOpenAIModel =
   | '@OpenAI/gpt-4-turbo:preview'
   | '@OpenAI/gpt-4-turbo:2024-04-09'
   | '@OpenAI/gpt-4-turbo:latest'
-  | '@OpenAI/gpt-4:latest'
   | '@OpenAI/gpt-4.1:latest'
   | '@OpenAI/gpt-4o-mini:2024-07-18'
   | '@OpenAI/gpt-4o-mini:latest'
@@ -141,6 +140,7 @@ export async function textGenerate<T = string>(model: TextGenerateModel, params:
     case '@OpenAI/gpt-4-turbo:preview':
     case '@OpenAI/gpt-4-turbo:2024-04-09':
     case '@OpenAI/gpt-4-turbo:latest':
+    case '@OpenAI/gpt-4.1:latest':
     case '@OpenAI/gpt-4o-mini:2024-07-18':
     case '@OpenAI/gpt-4o-mini:latest':
     case '@OpenAI/gpt-4o:2024-05-13':
@@ -154,7 +154,9 @@ export async function textGenerate<T = string>(model: TextGenerateModel, params:
     case '@OpenAI/o1:2024-12-17':
     case '@OpenAI/o1:latest':
     case '@OpenAI/o3-mini:2025-01-31':
-    case '@OpenAI/o3-mini:latest': {
+    case '@OpenAI/o3-mini:latest':
+    case '@OpenAI/o3:latest':
+    case '@OpenAI/o4-mini:latest': {
       distilledParams.format = formatJSONSchema('OpenAI', distilledParams.format)
       const modelName = model.split('/').slice(1).join('/').replace(':latest', '').replace(':', '-')
       result = openAI.text(modelName, distilledParams, debugCallback)

@@ -14,7 +14,7 @@ const responseSchema = z.object({
   ),
 })
 
-const result = await ai.run<z.infer<typeof responseSchema>>('text-generate', '@OpenAI/o1:2024-12-17', {
+const result = await ai.run<z.infer<typeof responseSchema>>('text-generate', '@Google/gemini-2.0-flash-lite', {
   prompt: 'What is the sky color in every 6 hour',
   stream: false,
   format: responseSchema,

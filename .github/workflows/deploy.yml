@@ -1,11 +1,12 @@
 name: NPM CD
 run-name: ${{ github.ref_name }}
 
-# permissions:
-#   contents: write
-#   packages: write
-#   attestations: write
-#   id-token: write
+permissions:
+  contents: write
+  packages: write
+  attestations: write
+  id-token: write
+  pages: write
 
 on:
   release:
@@ -13,16 +14,22 @@ on:
       - published
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref_name }}
   cancel-in-progress: true
-
-env:
-  REPO: ${{ github.repository }}
-  USERNAME: ${{ github.repository_owner }}
 
 jobs:
   publish:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        registry:
+          - url: https://npm.pkg.github.com
+            token: 'GITHUB_TOKEN'
+            scope: '@${{ github.repository_owner }}'
+          - url: https://registry.npmjs.org
+            token: 'NPM_TOKEN'
+            scope: '@${{ github.repository_owner }}'
+
     steps:
       - name: 📥 Checkout Repo
         uses: actions/checkout@v4
@@ -33,21 +40,19 @@ jobs:
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
+          registry-url: ${{ matrix.registry.url }}
+          scope: ${{ matrix.registry.scope }}
 
       - name: 📦 Install Dependencies
         run: bun install --frozen-lockfile
 
-      - name: ⚙️ Build Artifacts
-        run: bun run build
-
-      - name: 🔀 Publish to NPM
+      - name: ⚙️ Publish Package
         env:
-          NPM_CONFIG_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets[matrix.registry.token] }}
+          REGISTRY_URL: ${{ matrix.registry.url }}
         run: |
+          CLEAN_URL="${REGISTRY_URL#https://}"
+          echo "//${CLEAN_URL}/:_authToken=${NODE_AUTH_TOKEN}" > ./.npmrc
+          echo "registry=${REGISTRY_URL}" >> ./.npmrc
           bun publish --no-git-checks --access public
-
-      - name: 🔀 Publish to GitHub
-        env:
-          NPM_CONFIG_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          bun publish --no-git-checks --access public --registry https://npm.pkg.github.com/${{ env.USERNAME }}
+          rm ./.npmrc
