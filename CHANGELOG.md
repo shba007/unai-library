@@ -2,6 +2,18 @@
 
 # unai
 
+## v0.3.5
+
+[compare changes](https://github.com/shba007/unai/compare/v0.3.4...v0.3.5)
+
+### 🩹 Fixes
+
+- Update model reference in output example and adjust package dependencies ([921c4a2](https://github.com/shba007/unai/commit/921c4a2))
+
+### ❤️ Contributors
+
+- Shba007 ([@shba007](https://github.com/shba007))
+
 ## v0.3.4
 
 [compare changes](https://github.com/shba007/unai/compare/v0.3.3...v0.3.4)
